@@ -4,9 +4,13 @@
 
 Banuprakash C
 Co-founder Lucida Technologies Pvt Ltd.,
+
 Full Stack Architect
+
 banu@lucidatechnologies.com
+
 banuprakashc@yahoo.co.in
+
 https://www.linkedin.com/in/banu-prakash-50416019/
 --------------------------------------------------
 
