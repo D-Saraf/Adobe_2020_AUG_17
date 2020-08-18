@@ -26,7 +26,7 @@ public class SortClient {
 		Utility.sort(products);
 		
 		for(Product p : products) {
-			System.out.println(p.getName());
+			System.out.println(p); // toString()
 		}
 	}
 

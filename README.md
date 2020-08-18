@@ -606,5 +606,343 @@ Softwares Required:
 
 # Day 2
 
----------
+	---------
+	Day 1:
+	how to create object
+	how to create arrays
+	instance and static methods and variables
+	inheritance ==> generalization and specialization relationship
+	dynamic binding ==> polymorphism
+	----------------------------
 
+
+	Product is too generic, In real world there is nothing called as product.
+
+	Account is also too generic.
+
+
+	p instanceof Object ==> true
+
+	p instanceof Product ===> true
+
+	p instanceof Tv ===> true
+
+	p instanceof Mobile ===> false
+
+
+	==========
+
+	p.getClass() ===>  [ new Mobile()]
+
+
+
+	try {
+						Object ret = m.invoke(p);
+						System.out.println(ret);
+		} catch(Exception ex) {
+						System.out.println(ex);
+		}
+
+
+		Traditional way of invoking instance methods [ if name of method is know in advance]
+
+			<<context>>object.method(); ==> method(<<this>>object) ; 
+
+
+
+			@Secure(ROLE="ADMIN")
+			public double getPrice() {
+
+			}
+	============================================================
+
+	Generic Data type
+
+	class Rectangle <T> { 						class Rectangle {
+			T width;								Object width;
+			T breadth;								Object breadth;
+
+			... 									..........
+	} 											}
+
+	<T> is a generic Type ==> T can be of Object type only and not primitive type
+
+	Rectangle<Integer> r1 = new Rectangle<Integer>(4,5);
+	Rectangle<Double> r2 = new Rectangle<Double>(1.4,3.5);
+	Rectangle<String> r3 = new Rectangle<String>("A","B");
+
+
+	Integer is a typewrapper for int
+
+	Double is a typewrapper for double data type
+
+	===========
+
+		int x = 10; // primitive
+
+		Integer iX = x; // boxing ==> wrapped primitive x into object iX
+
+		int y = iX; // unboxing
+
+	==========
+
+	class Rectangle <T extends Number> { 						class Rectangle {
+			T width;												Number width;
+			T breadth;												Number breadth;
+
+			... 													..........
+	} 														}
+
+	Rectangle<Integer> r1 = new Rectangle<Integer>(4,5);
+	Rectangle<Double> r2 = new Rectangle<Double>(1.4,3.5);
+	Rectangle<String> r3 = new Rectangle<String>("A","B"); // compilation error
+
+	================================================================================================
+
+
+	Realization Relationship
+	------------------------
+
+		Object/component will realize the behaviour specified by other in order to communicate.
+
+		Object A ==> specifies certain protocols
+
+		Any object which follows these protocols can communicate with "A"
+
+		In real world this is done using interface [ HDMI / VGA ]
+
+		interface interfaceName {
+			abstract methods();
+		}
+
+		=====================
+
+		interface EmployeeDao {
+				void addEmployee(Employee e);
+				Employee getEmployee(int id);
+		}
+
+
+
+		all methods in interface by default are public and abstract
+
+		==================
+
+			Why do developers need to program to interface?
+				1) DESIGN
+				2) IMPLEMENTATION
+				3) TESTING
+				4) INTEGRATION
+				5) LOOSE COUPLING
+
+
+ 	============
+
+ 	1) clients are many and hetergeneous
+ 	2) Avoid exposing the implementation to client
+ 	==> use factory classes to overcome these issues
+
+ 	Factory ==> create object
+
+ 	===================================
+
+ 	How to create objects?
+
+ 		1) If we know the class name:
+
+ 			new ClassName(); // new Employee();
+
+ 		2) If we don't know the class name in advance:
+
+ 			String str = ... read from config file and assign to "str"
+
+ 			str = "com.adobe.prj.dao.EmployeeDaoMongoImpl";
+
+ 			Class.forName(str).newInstance(); // RTTI ==> Reflection API
+
+
+
+ 		============
+
+ 		Class.forName("java.lang.String").newInstance();
+
+ 		Class.forName("java.lang.Date").newInstance();
+
+ 		Class.forName("com.adobe.prj.dao.EmployeeDaoMongoImpl").newInstance();
+
+ 		===========
+
+ 		interfaces for Strategy Pattern ==> switch between stratgery [ mongo and mysql]
+ 			Loose coupling
+ 		===========
+
+ 		abstract class ==> generalization relationship
+ 			can have state + behaviour
+
+ 		interface ==> realization relationship
+ 			can't have state
+
+ 		=========================
+
+
+
+ 			obj1
+ 			obj2
+
+
+ 			if(obj1.compareTo(obj2) > 0) {
+ 				swap code ....
+ 			}
+
+ 			===========================================================================
+
+
+ 			String implments Comparable
+ 			Comparable c = new String("a");
+
+ 			Product implments Comparable
+ 			Comparable c = new Mobile(); 
+
+ 			===============================
+
+ 			interface Swim {							Dance d = new Actor();
+ 				swim();											d.dance();
+ 			} 											
+
+ 			interface Dance {							Fight f = new Hero();
+ 				dance();	 							f.fight(); // works
+ 			}											f.dance(); // won't work
+ 														f.swim(); // won't work
+ 			interface Fight { 							Dance d = (Dance) f;
+ 				fight(); 								d.dance(); //works
+ 			}
+
+ 			// Actor can dance
+ 			class Actor implements Dance {
+ 				dance() {....}
+ 			}
+
+ 			// Hero is an actor, hero can dance
+ 			class Hero extends Actor implements Swim, Fight{
+ 				swim() {...}
+ 				fight() { .... }
+ 			}	
+
+ 			=============================================================
+
+ 			FunctionalInterface is an interface where only one method needs to be implemented
+
+ 			interface Flyable {
+ 				fly();
+ 			}
+
+ 			--
+ 			Not a FunctionalInterface
+ 			interface EmployeeDao {
+				void addEmployee(Employee e);
+				Employee getEmployee(int id);
+			}
+
+			-----------------------------------------------
+			PermGen error happens when application is started
+			java -xms:12MB   MyApplication
+			interface Flyable {
+ 				fly();
+ 			}
+
+ 			class Bird implements Flyable {
+ 				//state
+ 				// other behaviour
+ 				fly() {..}
+ 			}
+
+ 			class AeroPlane implement Flyable {
+ 				// state
+ 				// other behaviour
+ 				fly() {..}	
+ 			}
+
+ 			Flyable f = new Bird();
+ 			Flyable f = new AeroPlane();
+
+ 			Flyable f = new Flyable(); //error
+
+ 			// Anonymous class
+ 			Flyable f = new Flyable() {
+				fly() { .... }
+ 			};
+
+
+ 			class Dummy1 implements Flyable {
+ 				fly() {
+ 					try jump from 6th floor
+ 			}
+ 		}
+
+ 			class Dummy2 implements Flyable {
+ 				fly() {
+ 					now try jump from 10th floor
+ 			}
+ 		}
+
+ 	================================================================================
+
+ 	Exception Handling
+ 	------------------
+ 		Exception: An abnormal condition that arises during program execution.
+ 				An exception can be error type [ can't handle] or exception type [ can provide alternate flow]
+
+ 				Error Type> Memory issues / JVM crash / Stack Overflow / UnsatisfiedLinkError
+
+ 				Exception Type> DB Connection issues/ FileNotFound  / NullPointer
+
+ 		In Java Exception is an object which gives the following info:
+ 			a) What went wrong?
+ 			b) Where ?
+ 			c) Why ?
+
+ 		========================================
+
+ 		Exception Types can be again classified as "Checked Type" and "Unchecked Type"
+
+
+ 		Unchecked Type 									
+ 		1) these exceptions occur due to reasons with JRE	
+ 		2) NullPointerException / ArithmeticException / ArrayIndexOutOfBoundsException / ClassCastException
+
+ 			Employee e;
+ 			e.setId(100); // NullPointerException
+
+ 			int[] elems = {4,6};
+ 			int x = elems [10]; //ArrayIndexOutOfBoundsException
+ 		3) Handle using conditional statement
+
+ 			public void display(Employee e) {
+ 				if(e !== null) {
+ 					syso ( e.getName() + "," + e.getId());
+ 				}
+ 			}
+
+ 			int[] elems = {4,6};
+ 			int index = 10;
+ 			if(index >= 0 && index < elems.length) {
+ 				int x = elems[index];
+ 			}
+
+ 		Checked Type
+ 		1) Reasons are outside of JRE
+ 		2) SQLException / IOException / ClassNotFoundException
+ 		3) should be handled using try-catch syntax
+
+ 			try {
+ 				//
+ 			} catch(SQLException ex){
+ 				// alternate flow or display proper message to user
+ 			}
+ 		4) Compiler enforces you to handle using try-catch syntax
+
+ 	======================================================================================
+
+ 	Java Collection Framework [ Data containers]
+ 	--------------------------------------------
+ 	
