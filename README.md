@@ -945,4 +945,116 @@ Softwares Required:
 
  	Java Collection Framework [ Data containers]
  	--------------------------------------------
- 	
+
+ 		Array is a data container [ contiguos memory]
+
+ 		int[] elems = new int[1000];
+
+ 		==> Can't grow nor shrink
+ 		==> adding /removing from arbitrary position is difficult
+
+ 		Always have array as first option for data container
+
+
+ 	JCF provides interfaces , implementation classes and utility classes [ sort, binarySearch, max, min]
+
+
+ 	interface Iterator <T> {
+ 		boolean hasNext()
+ 		T next();
+ 		T remove();
+ 	}
+ 	=============
+
+ 		List:
+ 			1) supports index based operation add(5, obj); get(45); remove(2);
+ 			2) ordered -> sequential store
+ 			3) supports duplicate elements
+ 			4) re-order [ sort , reverse, shuffle ]
+
+ 		Set:
+ 			1) unique collection
+ 			2) not ordered
+ 			3) can't re-order
+
+ 	==============
+
+ 	Comparable Vs Comparator
+
+ 	Comparable --> used for natural comparison and logic is part of entity / class ==> logic was in String/Product
+
+ 	Compartor --> custom requirements and logic is a part of client
+
+
+ 		String[] names = { "Danny" , "Lee", "Angelina" , "Brad", "George"};
+
+ 		Sorting Natural: Angelina , Brad , Danny , George and Lee [ Comparable was part of String class]
+
+ 		But this is also sorted: Lee, Brad , Danny, George and Angelina [ length ] [Compartor in cline code]
+
+
+ 		==========
+
+ 		List implementations from 3rd party APIS like [ Apache collection, VAVR]
+
+
+ 	Avoid this: not type safe collection
+
+ 	List list = new ArrayList();
+ 	list.add("A");
+ 	list.add(new Product());
+ 	list.add(new Date());
+
+ 		if(list.get(i) instanceof String) {
+ 			String s = list.get(i);
+ 		}
+
+ 	========
+
+ 	Prefer Generic Collection:
+
+ 	List<String> list = new ArrayList<String>();
+ 		list.add("A");
+ 		list.add(new Product()); // compilation error
+	================
+
+	if(p1.getPrice() > p2.getPrice()) {
+		return 1;
+	} else if (p2.getPrice() > p1.getPrice()) {
+			return -1;
+	}
+	return 0;
+
+	===========================================
+		OOP:
+			methods are tightly coupled to state of object:
+			deposit() // state balance
+			getBalance() // state --> balance
+
+
+		Functional Style of programming:
+			functions are not tightly copuled to any specific type of objects
+			sort() filter() map() reduce()
+			--> we use high order functions
+				===> functions which accept other functions as arguments
+				==> function return a function
+
+				[ treat functions as first class members similar to primitive / objects]
+
+
+		void filter(List<T> list , Predicate p) {
+			create a empty container
+			for Object o in list
+				if(p.test(o)) {
+					add to container
+				}
+			end loop
+			return container
+		}
+
+
+		filter(list, o -> o.getColor().equals("green"));
+		filter(list, o -> o.getChannel().equals("NEWS"));
+		=====================================================================
+
+
