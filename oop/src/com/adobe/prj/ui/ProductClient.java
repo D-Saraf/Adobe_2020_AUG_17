@@ -1,5 +1,7 @@
 package com.adobe.prj.ui;
 
+import java.lang.reflect.Method;
+
 import com.adobe.prj.entity.Mobile;
 import com.adobe.prj.entity.Product;
 import com.adobe.prj.entity.Tv;
@@ -17,11 +19,48 @@ public class ProductClient {
 		products[2] = new Tv(634, "Onida Thunder", 3500.00, "CRT");
 		products[3] = new Mobile(621, "iPhone XR", 99999.00, "4G");
 		products[4] = new Mobile(844, "Oppo", 9999.00, "4G");
-	
-		displayExpensiveProducts(products);
+//		products[5] = new Product();
 		
+//		displayExpensiveProducts(products);
+//		displayDetails(products);
+		displayUsingOCP(products);
 	}
 	
+	// OCP
+	private static void displayUsingOCP(Product[] products) {
+		for(Product p : products) {
+			System.out.println("*************");
+			Method[] methods = p.getClass().getMethods(); // RTTI
+			for(Method m : methods) {
+				if(m.getName().startsWith("get")) {
+					try {
+						Object ret = m.invoke(p);
+						System.out.println(ret);
+					} catch(Exception ex) {
+						System.out.println(ex);
+					}
+				}
+			}
+			System.out.println("*************");
+		}
+	}
+
+	// Not OCP
+	private static void displayDetails(Product[] products) {
+		for(Product p : products) {
+			System.out.println(p.getName() + "," + p.getPrice());
+			// type checking
+			if(p instanceof Tv) {
+				Tv t = (Tv) p; // type-cast
+				System.out.println(t.getScreenType());
+			} else if (p.getClass() == Mobile.class) {
+				Mobile m = ( Mobile) p;
+				System.out.println(m.getConnectivity());
+			}
+		}
+	}
+	
+
 	// OCP
 	private static void displayExpensiveProducts(Product[] products) {
 		for(int i = 0 ; i < products.length; i++) {
