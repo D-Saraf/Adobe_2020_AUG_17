@@ -367,5 +367,412 @@ https://www.linkedin.com/in/banu-prakash-50416019/
 		=================================================================================
 		
 
-	 
+	 	ORM ==> Object Relational Mapping
 
+	 	Java Class <-----------> Relational database table
+	 	fields <-------------> columns of table
+
+	 	Once mapping is done, ORM frameworks are going to take care of CRUD operations [ generated using annotations]
+
+	 	Hibernate is a ORM framework [ default provided by Sprng data jpa]
+
+	 	=============
+
+	 	1) Need to write entity classes with @Entity annotation
+	 	2) Do the mapping with @Table and @Column
+	 	3) need to identify a PK and that field should have @Id annotation
+	 	4) can specify @Id to be auto imcrement @GeneratedValue(strategy=IDENTITY)
+
+	 	--
+	 	5) Write interface extends JPARepository
+
+	 	6) Spring Data JPA generates class implementing this interface which contains CRUD operations
+
+
+	  =========
+
+	  	ORMs
+	  	 can generate DDL and DML
+
+	  	 DDL ==> ORMs checks if table exists, if exists maps to existing table
+	  	 			if not it creates table in database
+	  	 			if required it alters also
+	  	 DML ==> INSERT, DELETE, UPDATE and SELECT generated
+
+	  	=======
+
+	  	Spring DATA JPA disables AUTO Commit
+
+	  	INSERT SQL , UPDATE SQL or DELETE
+
+	  	commit / rollback
+
+	  	it makes the whole statements within the method as atomic
+	  	@Transactional
+	  		method() {
+	  				1) ..
+	  				2) ...
+	  				3) ... issues ==> throws Exception
+	  				...
+	  				...
+
+	  		}
+
+
+	  Java 8 feature
+
+	  productDao.findById(5) returns Optional<Product>
+
+	  Optional<Product> opt = productDao.findById(id);
+	  if(opt)
+
+
+	  application.properties
+	  	==> give details of database to which connection has t o be established
+
+
+	  hibernate.hbm2ddl-auto=update
+
+	  hbm ==> Hibernate mapping 2 DDL [ CREATE table, alter, drop]
+
+	  update==> if table already exists map it, else create tables
+
+
+	  ORM should generate SQL for MySQL5
+
+	  JP-QL: @Query("select p from Product p where p.price >= :pr")
+
+
+
+	  SQL 	
+	  	table and column names
+	  	Example:
+	  		select * from products where price >= 50000
+
+	  		select * from customers where first_name = 'Ashok';
+	  JP-QL
+	  	uses class name and fields
+	  		select p from Product p where p.price >= 50000
+
+	  		select c from Customer c where c.firstName = 'Ashok';
+=============================================================================================
+
+	
+		RESTful Web Service
+
+		REPRESENTATIONAL STATE TRANSFER 
+
+		A Resource is present on server [ database , file, tangilbel things like printer, etc]
+
+		Resource can be served to client in various formats [ Representation]
+
+		=======================================================================
+
+
+		we use the following HTTP headers to serve the data:
+
+		accept: application / json
+			"accept"	to serve the data to client
+
+		content-type: text/xml
+			"content-type": what type of data the client is sending to server
+
+		=====================
+
+		RESTful uses URI to identify the resource and HTTP methods to perform CRUD operations
+
+		Example:
+			http://localhost:8080/api/products
+			GET
+
+			--> get all products
+
+			--------
+
+			http://localhost:8080/api/products/5
+			GET
+
+			/ path parameter
+			--> get product whose id is 5
+
+			--------
+			http://localhost:8080/api/products?category=mobile
+			GET
+
+			? ==> Query parameter
+			get all mobiles [ filter]
+
+			http://localhost:8080/api/products?page=1&size=10
+			GET
+
+			pagination
+
+
+			---------------
+			http://localhost:8080/api/products
+			POST 
+
+			payload contains the new product which has to inserted into server resource
+
+			---------
+
+			http://localhost:8080/api/products/3
+			PUT
+
+			modify product whose PK is 3 with the new data sent as payload
+
+			--------
+
+			http://localhost:8080/api/products/3
+			DELETE
+
+			delete product whose PK is 3
+
+			----------
+
+			CREATE ===>  POST
+			READ ===> GET
+			UPDATE ==> PUT
+			DELETE ==> DELETE
+
+			--------------------
+
+
+			GET and DELETE ==> no payload
+
+			PUT and POST ==> contains payload
+
+			----------------------------------------------
+
+
+			@RequestBody ==> payload from client
+
+			@ResponseBody ==> payload to client
+
+
+			--------------
+
+			Order and Lineitem
+
+			============
+
+			Try doing similar actions for Customer // OrderService / CustomerController
+
+			====================================================================================
+
+			
+
+			Customer <----> Order
+
+			1 Customer places many orders [ one-to-many]
+
+			many orders can be placed by a customer [ many-to-one]
+
+			=========
+
+			order <---> items
+
+			1 order has many items
+			many items in a order
+
+
+			==================================================
+
+			Uber / ola / Meru ==> Taxi Service
+
+			Driver
+			Vehicle
+			Customer
+			Trip
+			Payment
+			Feedback
+
+
+			Trip is by which Customer
+			Trip which driver came
+			Trip payment done
+			Trip vehcicle engage
+
+			============
+
+			Order application:
+				core entity is "order"
+				for order establish relationship
+
+				order is by which customer
+				order has many items
+
+			=========================================
+
+
+			Ticket Tracker
+
+			==================
+
+				Employee
+				Ticket
+				Employee
+
+				Ticket --> employee [ rasied by ] many to one
+
+				Ticket ==> employee [ resolved by] many to one
+			================================
+
+
+			@Embeddable
+			class FullName {
+					firstName
+					lastName
+			}
+
+			@Entity
+			@Table(name="persons")
+			class Person {
+				@EmbeddeableId
+				FullName name;
+				// other fields
+			}
+
+			==========
+
+			@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+			@JoinColumn(name="order_fk")
+			private List<Item> items = new ArrayList<>();
+
+
+			1 order has 3 items:
+
+			Without cascade:
+				save(i1);
+				save(i2);
+				save(i3);
+				save(order)
+
+				-------	
+				delete(i1);
+				delete(i2);
+				delete(i3);
+				delete(order)
+
+			==============
+
+			with Cascade settings
+
+			save(order); // will automatically save all items of order
+			delete(order); // will delete all items of order
+
+			===========
+
+			fetch = FetchType.EAGER
+
+			get order will join items and fetch it
+
+			======
+			fetch = FetchType.LAZY
+
+			get order will get only order details not items
+			again I need to make a call to backedn to get itmes of that order
+
+
+			=====================
+
+			CustomerController, ProductController, OrderController
+			OrderDao, ProductDao, CustomerDao
+
+			==> no ItemController and ItemDao [ not required because of cascade option]
+
+			==============================
+			order
+
+			 {
+     			"total" : 50900.00,
+    			 "customer" : {
+        			 "email": "b@adobe.com"
+     			},
+     			"items" : [
+         				{
+         					"product" : {"id": 3},
+         					"qty" : 2,
+         					"amount": 900.00
+         				},
+         				{
+         					"product" : {"id" : 1},
+         					"qty": 1,
+         					"amount" : 50000.00
+         				}
+     			]
+
+ 		}
+
+ 		drop table orders cascade;
+ 		drop table items cascade;
+
+
+ 		 {
+     			"total" : 134000.00,
+    			 "customer" : {
+        			 "email": "a@adobe.com"
+     			},
+     			"items" : [
+         				{
+         					"product" : {"id": 2},
+         					"qty" : 1,
+         					"amount": 134000.00
+         				} 
+     			]
+
+ 		}
+
+ 		=======
+
+ 		@RunWith(SpringRunner.class)
+
+ 		create spring test bed 
+
+
+ 		@Autowired
+		private MockMvc mockMvc;
+
+		we can perform API calls
+
+
+		=============
+
+		POStMAN to TEST your REST apis
+
+		Junit to TEST MockMvc
+
+		==========================================
+
+		Entity:
+
+			@Entity
+			@Table
+			@Id
+
+			@OneToMany
+			@ManytoOne
+
+			@JoinColumn ===> FK
+
+			Cascade, FETCH
+
+		DAO:
+			interface EmployeeDao extends JPARepositiory<Employee, String> {
+				@Query(....)
+				custom methods()
+			}
+
+		Service:
+			@Transactional
+				INSERT, DELETE and UPDATE
+
+		Constroller:
+			@RestController
+			@RequestMapping
+			@GetMapping() @PostMapping(), ...
+
+		@ResponseBody, @RequestBody
+		=============================================
+
+		
